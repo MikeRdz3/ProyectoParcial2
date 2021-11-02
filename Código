@@ -1,0 +1,42 @@
+#include <LiquidCrystal.h>
+
+double force=0.0,res=0.0,peso=0.0, gr=9.81;
+float vin=0.0, vout=0.0;
+
+LiquidCrystal lcd(12,11,5,4,3,2);
+void setup(){
+  lcd.begin(16, 2);
+  pinMode(A0,INPUT);
+  Serial.begin(1000);
+}
+
+void loop() {
+  vin=(analogRead(A0));
+  vout=(5*vin)/1023;
+  res=15*((5/vout)-1);
+  if(vin<481){
+     force=pow((res/4.4045),-1.792114695);
+    if(force<0){
+      force+.1;
+    }
+    else{
+      force=force;
+    }
+  }
+  else{
+ force=pow(res/5.81,-1.45772595);
+  }
+  
+  peso=((force/gr)*1000);
+  lcd.clear();
+  lcd.setCursor(1,0);
+  lcd.print("Fuerza:"); 
+  lcd.print(force,3);
+  lcd.print("N");
+  lcd.setCursor(3,2);
+  lcd.print("Peso:");
+  lcd.print(peso,2);
+  lcd.print("g");
+  delay(1000);
+  lcd.clear();
+}
